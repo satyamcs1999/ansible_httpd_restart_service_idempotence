@@ -1,0 +1,73 @@
+- hosts: test
+  vars_files:
+    - vars.yml
+  tasks:
+  - name: Mount Directory Creation
+    file:
+      state: directory
+      path: "{{ root_directory }}"
+
+  - name: Mount Directory to CDROM
+    mount:
+      src: "/dev/cdrom"
+      path: "{{ root_directory }}"
+      state: mounted
+      fstype: "iso9660"
+
+  - name: YUM Repository - AppStream
+    yum_repository:
+      baseurl: "{{ root_directory }}/AppStream"
+      name: "DVD1"
+      description: "YUM Repository - AppStream"
+      gpgcheck: no
+
+  - name: YUM Repository - BaseOS
+    yum_repository:
+      baseurl: "{{ root_directory }}/BaseOS"
+      name: "DVD2"
+      description: "YUM Repository - BaseOS"
+      gpgcheck: no
+  
+  - name: HTTPD Installation
+    package:
+      name: "httpd"
+      state: present
+    when: ansible_distribution == "RedHat"
+    register: httpd_install
+
+  - name: New Document Root Creation
+    file:
+      path: "{{ document_root }}" 
+      state: directory
+    register: documentroot_creation
+
+  - name: Configuration File Setup
+    template:
+      dest: "/etc/httpd/conf.d/modify.conf"
+      src: "templates/localconf.conf.j2"
+    when: httpd_install.rc == 0
+    notify: Restart HTTPD Service
+
+  - name: Web Page Setup
+    template:
+      dest: "{{ document_root }}"
+      src: "web/index.html"
+    when: documentroot_creation.failed == false
+
+  - name: Starting HTTPD Service
+    service:
+      name: "httpd"
+      state: started
+
+  - name: Allow HTTPD Port for Firewall
+    firewalld:
+      port: "{{ httpd_port }}/tcp"
+      state: enabled
+      permanent: yes
+      immediate: yes
+
+  handlers:
+  - name: Restart HTTPD Service
+    service:
+      name: "httpd"
+      state: restarted 
