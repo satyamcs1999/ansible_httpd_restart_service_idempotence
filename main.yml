@@ -5,25 +5,25 @@
   - name: Mount Directory Creation
     file:
       state: directory
-      path: "{{ root_directory }}"
+      path: "{{ mount_directory }}"
 
   - name: Mount Directory to CDROM
     mount:
       src: "/dev/cdrom"
-      path: "{{ root_directory }}"
+      path: "{{ mount_directory }}"
       state: mounted
       fstype: "iso9660"
 
   - name: YUM Repository - AppStream
     yum_repository:
-      baseurl: "{{ root_directory }}/AppStream"
+      baseurl: "{{ mount_directory }}/AppStream"
       name: "DVD1"
       description: "YUM Repository - AppStream"
       gpgcheck: no
 
   - name: YUM Repository - BaseOS
     yum_repository:
-      baseurl: "{{ root_directory }}/BaseOS"
+      baseurl: "{{ mount_directory }}/BaseOS"
       name: "DVD2"
       description: "YUM Repository - BaseOS"
       gpgcheck: no
