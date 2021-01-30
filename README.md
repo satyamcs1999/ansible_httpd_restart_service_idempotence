@@ -67,5 +67,31 @@ https://httpd.apache.org/docs/
 </ul><br>
 
 <h3>Some Important Points To Be Noted:point_left:</h3>
+<ol>
+  <li>In the Ansible Playbook i.e., <b>main.yml</b>, the concept of <b>notify-handlers</b> is used for making HTTPD restart service <b>idempotent</b> i.e., as soon as any changes is detected in the HTTPD configuration file , the task specified in the handler executes and thereby HTTPD <b>restarts</b>.</li>
+  <li>Some additional functionalities includes allowance of HTTPD port number specified through the Firewall, using the <b>firewalld</b> module in Ansible. Also, <b>Document Root</b> and <b>Port Number</b> could be modified as per requirement.</li>
+  <li>In the Variable File i.e., <b>vars.yml</b>, tha value of <b>Mount Directory</b>, <b>Document Root</b> and <b>HTTPD Port Number</b> is specified to make the playbook more dynamic.</li>
+  <li><b>Template file</b> or <b>Jinja2</b> template i.e., <b>localconf.conf.j2</b> is created for HTTPD's configuration file.</li>
+  <li>Test Page is created and could be modified as per requirement.</li> 
+  <li>It should be noted that if the output of "<b>getenforce</b>" command is <b>Enforcing</b>, it would prevent the service restart due to any change, thereby it is advisable to use "<b>setenforce 0</b>" to change the output to <b>Permissive</b>.</li>
+</ol><br>
 
+<h3>Execution & Output</h3>
+<ul>
+  <li><b>Case I</b> : No changes in the <b>HTTPD's configuration file</b></li><br>
+  
+  ![Execution_Case1](https://cdn-images-1.medium.com/max/1000/1*826PZ1ixDwIePlYusi_y2A.gif)<br>
+  
+  ![Output_Case1](https://cdn-images-1.medium.com/max/1000/1*9akO8xHjRvhbPCK-PraxNQ.png)<br><br>
+  
+  <li><b>Case II</b> : Change in <b>HTTPD's configuration file</b> i.e., Port Number is changed from <b>8080</b> to <b>8081</b></li><br>
+  
+  ![Execution_Case2](https://cdn-images-1.medium.com/max/1000/1*pXyd69YXd7CHbg0N_K8ydw.gif)<br>
+  
+  ![Output_Case2](https://cdn-images-1.medium.com/max/1000/1*_8hI7ZKv5w2BtdlY_sye4A.png)<br>
+  
+</ul><br>
 
+<h2>Thank You :smiley:<h2>
+ <h3>LinkedIn Profile</h3>
+ https://www.linkedin.com/in/satyam-singh-95a266182
