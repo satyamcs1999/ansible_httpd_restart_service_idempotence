@@ -1,4 +1,4 @@
 httpd_port: "8081"
 document_root: "/var/www/test"
-root_directory: "/dvd1"
+mount_directory: "/dvd1"
 
